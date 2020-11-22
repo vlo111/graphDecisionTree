@@ -10,6 +10,7 @@ class SaveGraph extends Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
+    tree: PropTypes.object.isRequired,
   }
 
   constructor(props) {
@@ -84,7 +85,7 @@ class SaveGraph extends Component {
           message={this.handleRouteChange}
         />
         {showModal ? (
-          <SaveGraphModal toggleModal={this.toggleModal} onSave={this.handleDataSave} />
+          <SaveGraphModal toggleModal={this.toggleModal} onSave={this.handleDataSave} tree={this.props.tree} />
         ) : null}
       </div>
     );

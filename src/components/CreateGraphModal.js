@@ -7,14 +7,17 @@ import { withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Input from './form/Input';
 import Button from './form/Button';
-import { createGraphRequest } from '../store/actions/graphs';
+import { createTreeRequest, createGraphRequest } from '../store/actions/graphs';
 
 class CreateGraphModal extends Component {
   static propTypes = {
     createGraphRequest: PropTypes.func.isRequired,
+    createTreeRequest: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     singleGraph: PropTypes.object.isRequired,
+    singleTree: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
+    activeButton: PropTypes.string.isRequired,
   }
 
   constructor(props) {
@@ -35,21 +38,32 @@ class CreateGraphModal extends Component {
 
   addGraph = async () => {
     const { requestData } = this.state;
-    const { payload: { data } } = await this.props.createGraphRequest({
-      ...requestData,
-      status: 'active',
-    });
-    if (data?.graphId) {
-      this.props.history.replace(`/graphs/update/${data.graphId}`);
+
+    const isTree = this.props.activeButton === 'tree';
+
+    const { payload: { data } } = !isTree
+      ? await this.props.createGraphRequest({
+        ...requestData,
+        status: 'active',
+      })
+      : await this.props.createTreeRequest({
+        ...requestData,
+        status: 'active',
+      });
+
+    const id = data?.graphId ?? data?.treeId;
+
+    if (id) {
+      this.props.history.replace(isTree ? `/tree/update/${id}` : `/graphs/update/${id}`);
       return;
     }
     toast.error('Something went wrong');
   }
 
   render() {
-    const { singleGraph, match: { params: { graphId = '' } } } = this.props;
+    const { activeButton, singleGraph, singleTree, match: { params: { graphId = '', treeId = '' } } } = this.props;
     const { requestData } = this.state;
-    if (graphId || !_.isEmpty(singleGraph)) {
+    if ((graphId || !_.isEmpty(singleGraph)) || (treeId || !_.isEmpty(singleTree))) {
       return null;
     }
     return (
@@ -59,7 +73,7 @@ class CreateGraphModal extends Component {
         isOpen
       >
         <h2>
-          Create Graph
+          {activeButton !== 'tree' ? 'Create Graph' : 'Create decision tree'}
         </h2>
         <Input
           label="Title"
@@ -91,10 +105,13 @@ class CreateGraphModal extends Component {
 
 const mapStateToProps = (state) => ({
   singleGraph: state.graphs.singleGraph,
+  singleTree: state.graphs.singleTree,
+  activeButton: state.app.activeButton,
 });
 
 const mapDispatchToProps = {
   createGraphRequest,
+  createTreeRequest,
 };
 
 const Container = connect(

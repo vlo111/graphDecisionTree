@@ -36,33 +36,45 @@ class ToolBarHeader extends Component {
   render() {
     const { activeButton, match: { params: { graphId } } } = this.props;
     return (
-      <header id="header">
-        <Link to="/" className="logoWrapper">
-          <Logo className="logo" />
-          <span className="autoSaveText">Saving...</span>
-        </Link>
-        <AccountDropDown />
-        <MapsButton />
-        <Legend />
-        <div className="graphs">
-          <Button
-            icon={<SearchSvg />}
-            className={activeButton === 'search' ? 'active' : undefined}
-            onClick={() => this.handleClick('search')}
-          >
-            Search
-          </Button>
-          <ShareGraph graphId={+graphId} setButton />
-          <Button
-            icon={<ViewSvg />}
-            onClick={() => this.props.history.replace(`/graphs/view/${graphId}`)}
-          >
-            View mode
-          </Button>
+      activeButton !== 'tree'
+        ? (
+          <header id="header">
+            <Link to="/" className="logoWrapper">
+              <Logo className="logo" />
+              <span className="autoSaveText">Saving...</span>
+            </Link>
+            <AccountDropDown />
+            <MapsButton />
+            <Legend />
+            <div className="graphs">
+              <Button
+                icon={<SearchSvg />}
+                className={activeButton === 'search' ? 'active' : undefined}
+                onClick={() => this.handleClick('search')}
+              >
+                Search
+              </Button>
+              <ShareGraph graphId={+graphId} setButton />
+              <Button
+                icon={<ViewSvg />}
+                onClick={() => this.props.history.replace(`/graphs/view/${graphId}`)}
+              >
+                View mode
+              </Button>
 
-        </div>
+            </div>
 
-      </header>
+          </header>
+        )
+        : (
+          <header id="header">
+            <Link to="/">
+              <Logo className="logo" />
+            </Link>
+            <AccountDropDown />
+          </header>
+        )
+
     );
   }
 }

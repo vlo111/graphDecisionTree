@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { toast } from 'react-toastify';
 import {
   CLEAR_SINGLE_GRAPH,
+  CLEAR_SINGLE_TREE,
   UPDATE_SINGLE_GRAPH,
   CONVERT_GRAPH,
   GET_GRAPHS_LIST,
@@ -10,6 +11,7 @@ import {
   ADD_NODE_CUSTOM_FIELD_KEY,
   REMOVE_NODE_CUSTOM_FIELD_KEY,
   ACTIONS_COUNT, GET_SINGLE_EMBED_GRAPH, SET_GRAPH_CUSTOM_FIELDS,
+  OPEN_ADD_NEW_TREE_NODE_MODAL, GET_SINGLE_TREE,
 } from '../actions/graphs';
 import CustomFields from '../../helpers/CustomFields';
 import Chart from "../../Chart";
@@ -69,6 +71,19 @@ export default function reducer(state = initialState, action) {
         singleGraph: {},
       };
     }
+    case GET_SINGLE_TREE.REQUEST: {
+      return {
+        ...state,
+        singleTree: {},
+      };
+    }
+    case GET_SINGLE_TREE.SUCCESS: {
+      const { tree: singleTree } = action.payload.data;
+      return {
+        ...state,
+        singleTree,
+      };
+    }
     case GET_SINGLE_EMBED_GRAPH.SUCCESS:
     case GET_SINGLE_GRAPH.SUCCESS: {
       const { graph: singleGraph, embedLabels } = action.payload.data;
@@ -87,6 +102,12 @@ export default function reducer(state = initialState, action) {
         ...state,
         singleGraph: {},
         embedLabels: [],
+      };
+    }
+    case CLEAR_SINGLE_TREE: {
+      return {
+        ...state,
+        singleTree: {},
       };
     }
     case SET_GRAPH_CUSTOM_FIELDS: {
@@ -148,6 +169,15 @@ export default function reducer(state = initialState, action) {
           ...state.actionsCount,
           ...action.payload.data.result,
         },
+      };
+    }
+    case OPEN_ADD_NEW_TREE_NODE_MODAL: {
+      if (state.isAddTreeModalOpen === action.payload.open) {
+        return state;
+      }
+      return {
+        ...state,
+        isAddTreeModalOpen: action.payload.open,
       };
     }
     default: {

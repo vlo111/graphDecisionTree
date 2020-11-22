@@ -4793,5 +4793,113 @@ body .gh__menu {
 
 }
 
+.ScaledTree-rootDiv-1 {
+  margin-top: 0px !important;
+}
 
+.graphMode {
+  margin: 2% 8% 4% 8%;
+  h2 {
+    text-align: center;
+    font: normal normal bold 26px/36px Open Sans;
+    letter-spacing: 0px;
+    color: #0D0905;
+    opacity: 1;
+  }
+  h3 {
+    margin-top: 5%;
+    text-align: left;
+    font: normal normal 600 16px/22px Open Sans;
+    letter-spacing: 0px;
+    color: #0D0905;
+    opacity: 1;
+  }
+  .backButton {
+    text-align: left;
+    font: normal normal normal 14px/19px Open Sans;
+    letter-spacing: 0px;
+    color: #8794A3;
+    opacity: 1;
+  }
+  .submitButton {
 
+  }
+}
+
+.treeStep {
+  margin-right: 472px;
+  margin-left: -4%;
+}
+
+label.treeDropdown select {
+  padding: 10px 42px 10px 10px;
+  background: #f8f8f8;
+  color: #444;
+  border: 1px solid #aaa;
+  border-radius: 0;
+  display: inline-block;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+}
+label.treeDropdown select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #444;
+}
+label.treeDropdown select::-ms-expand {
+  display: none;
+}
+label.treeDropdown:before {
+  content: '';
+  right: 5px;
+  top: -7px;
+  width: 30px;
+  height: 33px;
+  background: #f8f8f8;
+  position: absolute;
+  pointer-events: none;
+  display: block;
+}
+label.treeDropdown {
+  position: relative;
+  margin-left: -4%;
+}
+label.treeDropdown:after {
+  content: '>';
+  font: 16px Consolas, monospace;
+  color: #444;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+  right: 2px;
+  top: 6px;
+  border-bottom: 1px solid #aaa;
+  position: absolute;
+  pointer-events: none;
+  width: 34px;
+  padding: 0 0 5px 0;
+  text-indent: 14px;
+}
+@media screen\0 {
+  label.treeDropdown:after {
+    width: 38px;
+    text-indent: 15px;
+    right: 0;
+  }
+}
+@media screen and (min--moz-device-pixel-ratio:0) {
+  label.treeDropdown select { padding-right: 40px; }
+  label.treeDropdown:before { right: 6px; }
+  label.treeDropdown:after {
+    text-indent: 14px;
+    right: 6px;
+    top: -5px;
+    width: 36px;
+  }
+}
+.treeGraph {
+  margin-top: 60px;
+}

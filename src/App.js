@@ -46,8 +46,10 @@ class App extends Component {
             <Route path="/graphs/preview/:graphId" component={GraphView} />
             <Route path="/graphs/filter/:graphId" component={GraphView} />
             <Route path="/graphs/create" component={GraphForm} />
+            <Route path="/tree/create" component={GraphForm} />
             <Route path="/graphs/shared" component={Shared} />
             <Route path="/graphs/update/:graphId" component={GraphForm} />
+            <Route path="/tree/update/:treeId" component={GraphForm} />
             <Route path="/graphs/author/:authorId" component={GraphForm} />
 
             <Route path="/graphs/embed/filter/:graphId/:token" component={suspense(GraphEmbed)} />

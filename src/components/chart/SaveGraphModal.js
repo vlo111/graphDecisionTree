@@ -14,6 +14,7 @@ import {
   createGraphRequest,
   getSingleGraphRequest,
   updateGraphRequest,
+  updateTreeRequest,
   updateGraphThumbnailRequest,
 } from '../../store/actions/graphs';
 import { setActiveButton, setLoading } from '../../store/actions/app';
@@ -29,10 +30,15 @@ class SaveGraphModal extends Component {
     updateGraphRequest: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
     singleGraph: PropTypes.object.isRequired,
+    singleTree: PropTypes.object.isRequired,
     customFields: PropTypes.object.isRequired,
     toggleModal: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
+    activeButton: PropTypes.string.isRequired,
+    history: PropTypes.object.isRequired,
+    tree: PropTypes.object.isRequired,
+    updateTreeRequest: PropTypes.func.isRequired,
   }
 
   initValues = memoizeOne((singleGraph) => {
@@ -81,6 +87,27 @@ class SaveGraphModal extends Component {
     });
     files = await Promise.allValues(files);
     return { nodes, files };
+  }
+
+  saveTreeGraph = async () => {
+    const { requestData } = this.state;
+    const { match: { params: { treeId } } } = this.props;
+
+    this.props.setLoading(true);
+
+    const treeData = this.props.tree;
+
+    const { payload: { data } } = await this.props.updateTreeRequest(treeId, {
+      ...requestData,
+      ...treeData,
+    });
+    const resTreeId = data.treeId;
+
+    toast.info('Successfully saved');
+
+    this.props.setLoading(false);
+    this.props.toggleModal(false);
+    this.props.history.goBack();
   }
 
   saveGraph = async (status, forceCreate) => {
@@ -142,79 +169,114 @@ class SaveGraphModal extends Component {
 
   render() {
     const { requestData } = this.state;
-    const { singleGraph } = this.props;
+    const { singleGraph, singleTree, activeButton } = this.props;
     const nodes = Chart.getNodes();
-    this.initValues(singleGraph);
+    this.initValues(activeButton !== 'tree' ? singleGraph : singleTree);
     const canSave = nodes.length && requestData.title;
     const isUpdate = !!singleGraph.id;
     const isTemplate = singleGraph.status === 'template';
     return (
-      <Modal
-        className="ghModal ghModalSave"
-        overlayClassName="ghModalOverlay"
-        isOpen
-        onRequestClose={() => this.props.toggleModal(false)}
-      >
-        <h2>
-          {isTemplate ? 'Save this template' : 'Save this graph'}
-        </h2>
-        <Input
-          label="Title"
-          value={requestData.title}
-          onChangeText={(v) => this.handleChange('title', v)}
-        />
-        <Input
-          label="Description"
-          value={requestData.description}
-          textArea
-          onChangeText={(v) => this.handleChange('description', v)}
-        />
-        {false ? (
-          <Select
-            label="Status"
-            value={GRAPH_STATUS.find((o) => o.value === requestData.status)}
-            options={GRAPH_STATUS}
-            onChange={(v) => this.handleChange('status', v?.value || 'active')}
-          />
-        ) : null}
-        <div className="buttons">
-          {isTemplate ? (
-            <>
-              <Button onClick={() => this.saveGraph('active', true)} disabled={!canSave}>
-                Save as Graph
-              </Button>
-              <Button onClick={() => this.saveGraph('template', false)} disabled={!canSave}>
+      activeButton !== 'tree'
+        ? (
+          <Modal
+            className="ghModal ghModalSave"
+            overlayClassName="ghModalOverlay"
+            isOpen
+            onRequestClose={() => this.props.toggleModal(false)}
+          >
+            <h2>
+              {isTemplate ? 'Save this template' : 'Save this graph'}
+            </h2>
+            <Input
+              label="Title"
+              value={requestData.title}
+              onChangeText={(v) => this.handleChange('title', v)}
+            />
+            <Input
+              label="Description"
+              value={requestData.description}
+              textArea
+              onChangeText={(v) => this.handleChange('description', v)}
+            />
+            {false ? (
+              <Select
+                label="Status"
+                value={GRAPH_STATUS.find((o) => o.value === requestData.status)}
+                options={GRAPH_STATUS}
+                onChange={(v) => this.handleChange('status', v?.value || 'active')}
+              />
+            ) : null}
+            <div className="buttons">
+              {isTemplate ? (
+                <>
+                  <Button onClick={() => this.saveGraph('active', true)} disabled={!canSave}>
+                    Save as Graph
+                  </Button>
+                  <Button onClick={() => this.saveGraph('template', false)} disabled={!canSave}>
+                    Save
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button onClick={() => this.saveGraph('template', true)}>
+                    Save as Template
+                  </Button>
+                  <Button
+                    className="saveNode"
+                    onClick={() => this.saveGraph(requestData.status, false)}
+                    disabled={!canSave}
+                  >
+                    {isUpdate ? 'Save' : 'Create'}
+                  </Button>
+                </>
+              )}
+            </div>
+
+          </Modal>
+        )
+        : (
+          <Modal
+            className="ghModal ghModalSave"
+            overlayClassName="ghModalOverlay"
+            isOpen
+            onRequestClose={() => this.props.toggleModal(false)}
+          >
+            <h2>
+              Save this graph
+            </h2>
+            <Input
+              label="Title"
+              value={requestData.title}
+              onChangeText={(v) => this.handleChange('title', v)}
+            />
+            <Input
+              label="Description"
+              value={requestData.description}
+              textArea
+              onChangeText={(v) => this.handleChange('description', v)}
+            />
+            <div className="buttons">
+              <Button className="saveNode" onClick={() => this.saveTreeGraph()}>
                 Save
               </Button>
-            </>
-          ) : (
-            <>
-              <Button onClick={() => this.saveGraph('template', true)}>
-                Save as Template
-              </Button>
-              <Button
-                className="saveNode"
-                onClick={() => this.saveGraph(requestData.status, false)}
-                disabled={!canSave}
-              >
-                {isUpdate ? 'Save' : 'Create'}
-              </Button>
-            </>
-          )}
-        </div>
+            </div>
 
-      </Modal>
+          </Modal>
+        )
     );
   }
 }
 
 const mapStateToProps = (state) => ({
+  activeButton: state.app.activeButton,
   singleGraph: state.graphs.singleGraph,
+  singleTree: state.graphs.singleTree,
   customFields: state.graphs.singleGraph.customFields || {},
 });
 const mapDispatchToProps = {
   createGraphRequest,
   updateGraphRequest,
+  updateTreeRequest,
   updateGraphThumbnailRequest,
   getSingleGraphRequest,
   setActiveButton,

@@ -19,10 +19,22 @@ export function createGraphRequest(requestData) {
   return CREATE_GRAPH.request(() => Api.createGraph(requestData));
 }
 
+export const CREATE_TREE = define('CREATE_TREE');
+
+export function createTreeRequest(requestData) {
+  return CREATE_TREE.request(() => Api.createTree(requestData));
+}
+
 export const UPDATE_GRAPH = define('UPDATE_GRAPH');
 
 export function updateGraphRequest(id, requestData) {
   return UPDATE_GRAPH.request(() => Api.updateGraph(id, requestData));
+}
+
+export const UPDATE_TREE = define('UPDATE_TREE');
+
+export function updateTreeRequest(id, requestData) {
+  return UPDATE_TREE.request(() => Api.updateTree(id, requestData));
 }
 
 export const UPDATE_GRAPH_DATA = define('UPDATE_GRAPH_DATA');
@@ -55,6 +67,12 @@ export function getSingleGraphRequest(graphId) {
   return GET_SINGLE_GRAPH.request(() => Api.getSingleGraph(graphId));
 }
 
+export const GET_SINGLE_TREE = define('GET_SINGLE_TREE');
+
+export function getSingleTreeRequest(treeId) {
+  return GET_SINGLE_TREE.request(() => Api.getSingleTree(treeId));
+}
+
 export const GET_SINGLE_EMBED_GRAPH = define('GET_SINGLE_EMBED_GRAPH');
 
 export function getSingleEmbedGraphRequest(graphId, token) {
@@ -66,6 +84,15 @@ export const CLEAR_SINGLE_GRAPH = 'CLEAR_SINGLE_GRAPH';
 export function clearSingleGraph() {
   return {
     type: CLEAR_SINGLE_GRAPH,
+    payload: {},
+  };
+}
+
+export const CLEAR_SINGLE_TREE = 'CLEAR_SINGLE_TREE';
+
+export function clearSingleTree() {
+  return {
+    type: CLEAR_SINGLE_TREE,
     payload: {},
   };
 }
@@ -125,4 +152,15 @@ export const ACTIONS_COUNT = define('ACTIONS_COUNT');
 
 export function getActionsCountRequest(id) {
   return ACTIONS_COUNT.request(() => Api.getActionsCount(id));
+}
+
+export const OPEN_ADD_NEW_TREE_NODE_MODAL = 'OPEN_ADD_NEW_TREE_NODE_MODAL';
+
+export function openedAddNewTreeNodeModal(open) {
+  return {
+    type: OPEN_ADD_NEW_TREE_NODE_MODAL,
+    payload: {
+      open,
+    },
+  };
 }

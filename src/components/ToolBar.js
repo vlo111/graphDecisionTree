@@ -37,7 +37,8 @@ class ToolBar extends Component {
     const { activeButton, match: { params: { graphId } } } = this.props;
     return (
       <div id="toolBar">
-        <div className="top">
+        {activeButton !== 'tree' && (
+          <div className="top">
 
           <SaveGraph />
           <Undo />
@@ -87,6 +88,7 @@ class ToolBar extends Component {
 
           </div>
         </div>
+        )}
         <div className="bottom helpWrapper">
           <Button icon={<InfoSvg />}>
             Help

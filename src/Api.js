@@ -90,8 +90,16 @@ class Api {
     return api.post('/graphs/create', requestData);
   }
 
+  static createTree(requestData) {
+    return api.post('/tree/create', requestData);
+  }
+
   static updateGraph(id, requestData) {
     return api.put(`/graphs/update/${id}`, requestData);
+  }
+
+  static updateTree(id, requestData) {
+    return api.put(`/tree/update/${id}`, requestData);
   }
 
   static updateGraphData(id, requestData) {
@@ -120,6 +128,10 @@ class Api {
 
   static getSingleGraph(graphId) {
     return api.get(`/graphs/single/${graphId}`);
+  }
+
+  static getSingleTree(treeId) {
+    return api.get(`/tree/single/${treeId}`);
   }
 
   static getSingleEmbedGraph(graphId, token) {
