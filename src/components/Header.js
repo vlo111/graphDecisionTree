@@ -16,14 +16,14 @@ class Header extends Component {
         <SearchGraphs />
         <div className="start-graphs">
           <Link to="/graphs/create" style={{ marginLeft: 65 }}>
-            Start a Graphs
+            Start a graph
           </Link>
         </div>
-
+       
         <div className="right-elements">
-          {/*<Notification />*/}
+          {/* <Notification /> */}
           <div className="signOut">
-           <AccountDropDown />
+           <AccountDropDown /> 
 
           </div>
         </div>
