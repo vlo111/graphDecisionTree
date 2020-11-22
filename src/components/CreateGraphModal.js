@@ -61,10 +61,18 @@ class CreateGraphModal extends Component {
   }
 
   render() {
-    const { activeButton, singleGraph, singleTree, match: { params: { graphId = '', treeId = '' } } } = this.props;
+    const {
+      activeButton, singleGraph, singleTree, match: { params: { graphId = '', treeId = '' } },
+    } = this.props;
     const { requestData } = this.state;
-    if ((graphId || !_.isEmpty(singleGraph)) || (treeId || !_.isEmpty(singleTree))) {
-      return null;
+    if (activeButton === 'create') {
+      if (graphId || !_.isEmpty(singleGraph)) {
+        return null;
+      }
+    } else if (activeButton === 'tree') {
+      if (treeId || !_.isEmpty(singleTree)) {
+        return null;
+      }
     }
     return (
       <Modal
